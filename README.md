@@ -56,22 +56,24 @@ Ecommerce/
 └── product.js
 
 ## 🧠 Key Features
-🔐 User Login / Register System
-🎨 Modern Responsive UI (Dark Mode)
-🛍 Product View & Add to Cart
-🛒 Real-time Cart Price Updates
-📍 Address Entry Page
-💳 Mock Payment Simulation
-🧾 Order Summary & Success Page
-🕒 Order History Linked to Logged-in User
-📦 Data Stored for Each User Individually
+- 🔐 Login & Register System
+- 🎨 Dark & Responsive UI
+- 🛍 Product Listing & Detailed View
+- 🛒 Add to Cart with Real-Time Pricing
+- 📍 Address Input Page
+- 💳 Mock Payment & Order Confirmation
+- 🧾 Success Screen with Summary
+- 🕒 Order History Linked to User
+- 📦 Firebase Firestore Database
 
 ## 🚀 Future Enhancements
-💳 Razorpay / Stripe Payment Integration
-🧑‍💼 Admin Dashboard for Product Management
-⭐ Ratings & Reviews System
-📩 Email Order Confirmation
-📦 QR Code Generation for Order Receipt
+- 💳 Razorpay / Stripe Payment Gateway
+- 🧑‍💼 Admin Dashboard to Manage Products
+- ⭐ User Reviews & Ratings
+- 📩 Email / SMS Order Confirmation
+- 🧾 Invoice with QR Code
+- 📱 Mobile App Version (React Native)
+
 
 👨‍💻 Developed By
 Yaswanth Addula
