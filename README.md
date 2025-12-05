@@ -81,5 +81,5 @@ Yaswanth Addula
 🏫 Saveetha School of Engineering
 
 📬 Contact
--📧 Email: yaswanthaddula@gmail.com
--🔗 GitHub: https://github.com/yaswanthaddula
+- 📧 Email: yaswanthaddula@gmail.com
+- 🔗 GitHub: https://github.com/yaswanthaddula
