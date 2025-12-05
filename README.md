@@ -3,9 +3,9 @@
 A fully functional E-Commerce Website built using HTML, CSS, and JavaScript.
 This platform includes user login/register, product browsing, add-to-cart system, address entry, mock payment confirmation, and order history.
 
-🚀 Live & Working
-🎓 Perfect for Student Projects & Resume Portfolio
-🌙 Modern Dark Theme + Fully Responsive Design
+- 🚀 Live & Working
+- 🎓 Perfect for Student Projects & Resume Portfolio
+- 🌙 Modern Dark Theme + Fully Responsive Design
 
 ## 🌐 Live Demo
 🔗 https://ecommerce-eb22f.web.app
