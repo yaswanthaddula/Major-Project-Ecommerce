@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order History</title>
+  <link rel="stylesheet" href="css/history.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    .back-home {
+      display: inline-block;
+      margin: 10px 0;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .back-home:hover {
+      background-color: #0056b3;
+    }
+
+    .history-container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .item {
+      display: flex;
+      gap: 10px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 10px;
+      align-items: center;
+    }
+
+    .item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="history-container">
+    <a href="home.html" class="back-home">🏠 Back to Home</a>
+    <h1>📜 Your Order History</h1>
+    <div id="orders"></div>
+    <div id="pagination">
+      <button id="prevBtn">Previous</button>
+      <span id="pageNum">Page 1</span>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7KsWtxt0d5j3mYtv-U3K9LoqbAuDD6Xs",
+      authDomain: "ecommerce-eb22f.firebaseapp.com",
+      projectId: "ecommerce-eb22f",
+      storageBucket: "ecommerce-eb22f.appspot.com",
+      messagingSenderId: "968284003766",
+      appId: "1:968284003766:web:d1d31b776618f19039f517"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ordersDiv = document.getElementById("orders");
+    let orders = [];
+    let currentPage = 1;
+    const ordersPerPage = 3;
+
+    function renderOrders(page) {
+      ordersDiv.innerHTML = "";
+      const startIndex = (page - 1) * ordersPerPage;
+      const endIndex = startIndex + ordersPerPage;
+      const paginatedOrders = orders.slice(startIndex, endIndex);
+
+      if (paginatedOrders.length === 0) {
+        ordersDiv.innerHTML = "<p>No orders found.</p>";
+        return;
+      }
+
+      paginatedOrders.forEach(({ id, data }) => {
+        const orderElement = document.createElement("div");
+        orderElement.classList.add("order");
+
+        const address = data.address || {};
+        const name = address.name || "N/A";
+        const phone = address.phone || "N/A";
+        const fullAddress = `${address.address || ""}, ${address.city || ""}, ${address.pincode || ""}`;
+
+        orderElement.innerHTML = `
+          <h3>🛒 Order ID: ${id}</h3>
+          <p><strong>Date:</strong> ${new Date(data.orderTime).toLocaleString()}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Address:</strong> ${fullAddress}</p>
+
+          <div class="items">
+            ${data.items.map(item => `
+              <div class="item">
+                <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}">
+                <div>
+                  <p><strong>${item.name}</strong></p>
+                  <p>₹${item.price}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <button class="deleteBtn" data-id="${id}">❌ Cancel Order</button>
+          <hr>
+        `;
+
+        ordersDiv.appendChild(orderElement);
+      });
+
+      document.getElementById("pageNum").innerText = `Page ${currentPage}`;
+      addDeleteListeners();
+    }
+
+    function addDeleteListeners() {
+      const deleteButtons = document.querySelectorAll(".deleteBtn");
+      deleteButtons.forEach(button => {
+        button.addEventListener("click", async () => {
+          const id = button.dataset.id;
+          if (confirm("Are you sure you want to cancel this order?")) {
+            await deleteDoc(doc(db, "orders", id));
+            orders = orders.filter(order => order.id !== id);
+            renderOrders(currentPage);
+          }
+        });
+      });
+    }
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderOrders(currentPage);
+      }
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      const maxPage = Math.ceil(orders.length / ordersPerPage);
+      if (currentPage < maxPage) {
+        currentPage++;
+        renderOrders(currentPage);
+      }
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const snapshot = await getDocs(collection(db, "orders"));
+        orders = [];
+
+        snapshot.forEach(docSnap => {
+          if (docSnap.id.startsWith(userId)) {
+            orders.push({ id: docSnap.id, data: docSnap.data() });
+          }
+        });
+
+        renderOrders(currentPage);
+      } else {
+        alert("Please login to view your order history.");
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

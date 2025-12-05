@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - E-Commerce</title>
+  <link rel="stylesheet" href="css/register.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <input type="text" id="name" placeholder="Enter Your Name" required />
+    <input type="email" id="email" placeholder="Enter Email" required />
+    <input type="password" id="password" placeholder="Enter Password" required />
+    <button onclick="register()">Register</button>
+    <p id="message"></p>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+
+  <script type="module">
+    import { auth } from '../scripts/firebase-config.js';
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const nameInput = document.getElementById("name");
+    const message = document.getElementById("message");
+
+    window.register = async function () {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      const name = nameInput.value;
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+
+        // ✅ Save name to localStorage for welcome message on home page
+        localStorage.setItem("userName", name);
+
+        message.style.color = "green";
+        message.textContent = "✅ Registration successful!";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      } catch (error) {
+        if (error.code === "auth/email-already-in-use") {
+          message.style.color = "red";
+          message.textContent = "⚠️ Already registered. Please login.";
+        } else if (error.code === "auth/invalid-email") {
+          message.style.color = "red";
+          message.textContent = "⚠️ Invalid email address.";
+        } else if (error.code === "auth/weak-password") {
+          message.style.color = "red";
+          message.textContent = "⚠️ Password should be at least 6 characters.";
+        } else {
+          message.style.color = "red";
+          message.textContent = "⚠️ " + error.message;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

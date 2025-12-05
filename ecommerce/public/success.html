@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Success</title>
+  <link rel="stylesheet" href="css/success.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+  <div class="success-container">
+    <h1>🎉 Order Successful!</h1>
+    <p>Thank you for your purchase.</p>
+    <button onclick="goHome()">Go to Home</button>
+  </div>
+
+  <script type="module">
+    // ✅ Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    // ✅ Your Firebase SDK config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7KsWtxt0d5j3mYtv-U3K9LoqbAuDD6Xs",
+      authDomain: "ecommerce-eb22f.firebaseapp.com",
+      projectId: "ecommerce-eb22f",
+      storageBucket: "ecommerce-eb22f.firebasestorage.app",
+      messagingSenderId: "968284003766",
+      appId: "1:968284003766:web:d1d31b776618f19039f517"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ✅ Get data from localStorage
+    const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+    const addressData = JSON.parse(localStorage.getItem("userAddress")) || {};
+
+    // ✅ Save order to Firestore after verifying login
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const email = user.email;
+        const orderId = "order_" + Date.now();
+
+        const order = {
+          email: email,
+          items: cartData,
+          address: addressData,
+          orderTime: new Date().toISOString()
+        };
+
+        try {
+          await setDoc(doc(db, "orders", `${userId}_${orderId}`), order);
+          console.log("✅ Order saved to Firestore");
+
+          // ✅ Clear local storage after successful save
+          localStorage.removeItem("cart");
+          localStorage.removeItem("userAddress");
+        } catch (error) {
+          console.error("❌ Failed to save order:", error);
+        }
+      } else {
+        alert("Please login first to complete your order.");
+        window.location.href = "login.html";
+      }
+    });
+
+    // ✅ "Go to Home" button function
+    window.goHome = function () {
+      window.location.href = "home.html";
+    };
+  </script>
+</body>
+</html>

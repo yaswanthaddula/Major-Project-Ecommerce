@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>E-Commerce Home</title>
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"> <!-- ✅ Favicon added here -->
+  <style>
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f9f9f9;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 1;
+    }
+
+    #welcome-msg {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d6d206;
+    }
+
+    #logout-btn {
+      padding: 8px 14px;
+      background-color: crimson;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+
+    #cart-icon {
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    #orders-btn {
+      margin-left: 15px;
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #orders-btn:hover {
+      background-color: #218838;
+    }
+
+    /* 🔍 Search bar styles */
+    .search-container {
+      margin: 20px auto;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .search-container input[type="text"] {
+      width: 80%;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div id="welcome-msg">Welcome!</div>
+      <button id="orders-btn" onclick="window.location.href='history.html'">My Orders</button>
+    </div>
+    <div class="header-center">
+      <h1 style="margin: 0;">E-Commerce</h1>
+    </div>
+    <div class="header-right">
+      <button id="logout-btn">Logout</button>
+      <div id="cart-icon">🛒 <span id="cart-count">0</span></div>
+    </div>
+  </header>
+
+  <!-- 🔍 Search Bar -->
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Search for products..." />
+  </div>
+
+  <main id="products-container">
+    <!-- Products will load here -->
+  </main>
+
+  <!-- Product Loading Script -->
+  <script type="module" src="./scripts/home.js"></script>
+
+  <!-- Firebase Auth + Logout logic -->
+  <script type="module">
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7KsWtxt0d5j3mYtv-U3K9LoqbAuDD6Xs",
+      authDomain: "ecommerce-eb22f.firebaseapp.com",
+      projectId: "ecommerce-eb22f",
+      storageBucket: "ecommerce-eb22f.appspot.com",
+      messagingSenderId: "968284003766",
+      appId: "1:968284003766:web:d1d31b776618f19039f517"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    // Show logged-in user email in welcome message
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userEmail = user.email;
+        document.getElementById("welcome-msg").textContent = `Welcome, ${userEmail}!`;
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    // Cart redirect
+    document.getElementById("cart-icon").addEventListener("click", () => {
+      window.location.href = "cart.html";
+    });
+
+    // Logout
+    document.getElementById("logout-btn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        localStorage.clear();
+        alert("Logged out successfully!");
+        window.location.href = "login.html";
+      }).catch((error) => {
+        console.error("Logout Error:", error);
+        alert("Error logging out. Try again.");
+      });
+    });
+  </script>
+</body>
+</html>

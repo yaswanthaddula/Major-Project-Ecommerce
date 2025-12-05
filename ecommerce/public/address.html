@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enter Address & Payment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f7f8f9, #e2ebf0);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .address-container {
+      background-color: #ffffff;
+      padding: 40px 35px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 420px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .address-container:hover {
+      transform: scale(1.01);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    h2, h3 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input, textarea, button, select {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #007bff;
+      background-color: #fff;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.02);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Stylish Payment Section */
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .payment-options label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .payment-options input[type="radio"] {
+      accent-color: #007bff;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .payment-options label:hover {
+      background-color: #eaf2ff;
+      border-color: #007bff;
+    }
+
+    .card-info, .netbanking-info, .upi-info {
+      margin-top: 18px;
+      background-color: #f4f6f8;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+    }
+
+    .card-info input,
+    .netbanking-info select,
+    .upi-info input {
+      margin-top: 10px;
+    }
+
+    .submit-payment {
+      background-color: #007bff;
+      margin-top: 18px;
+    }
+
+    .submit-payment:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="address-container">
+    <h2>Delivery Address</h2>
+    <form id="address-form">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="text" id="phone" placeholder="Phone Number" required />
+      <textarea id="address" placeholder="Full Address" required></textarea>
+      <input type="text" id="city" placeholder="City" required />
+      <input type="text" id="pincode" placeholder="Pincode" required />
+      <button type="submit">Continue to Payment</button>
+    </form>
+
+    <div id="payment-section" class="hidden">
+      <h3>Select Payment Method</h3>
+      <div class="payment-options">
+        <label>
+          <input type="radio" name="payment" value="UPI" required />
+          <span>UPI</span>
+        </label>
+        <label>
+          <input type="radio" name="payment" value="Credit Card" />
+          <span>Credit / Debit Card</span>
+        </label>
+        <label>
+          <input type="radio" name="payment" value="NetBanking" />
+          <span>NetBanking</span>
+        </label>
+        <label>
+          <input type="radio" name="payment" value="Cash on Delivery" />
+          <span>Cash on Delivery</span>
+        </label>
+      </div>
+
+      <div id="card-info" class="card-info hidden">
+        <input type="text" placeholder="Card Holder Name" />
+        <input type="text" placeholder="Card Number" maxlength="16" />
+        <input type="text" placeholder="Expiry Date (MM/YY)" maxlength="5" />
+        <input type="text" placeholder="CVV" maxlength="3" />
+      </div>
+
+      <div id="upi-info" class="upi-info hidden">
+        <input type="text" placeholder="Enter UPI ID (e.g., name@bank)" />
+      </div>
+
+      <div id="netbanking-info" class="netbanking-info hidden">
+        <label for="bank-select">Choose Bank:</label>
+        <select id="bank-select">
+          <option value="">Select Bank</option>
+          <option value="SBI">State Bank of India</option>
+          <option value="HDFC">HDFC Bank</option>
+          <option value="ICICI">ICICI Bank</option>
+          <option value="AXIS">Axis Bank</option>
+          <option value="Kotak">Kotak Mahindra Bank</option>
+        </select>
+      </div>
+
+      <button class="submit-payment">Pay & Confirm Order</button>
+    </div>
+  </div>
+
+  <script>
+    const addressForm = document.getElementById("address-form");
+    const paymentSection = document.getElementById("payment-section");
+    const submitPaymentBtn = document.querySelector(".submit-payment");
+
+    const cardInfoDiv = document.getElementById("card-info");
+    const upiInfoDiv = document.getElementById("upi-info");
+    const netbankingInfoDiv = document.getElementById("netbanking-info");
+
+    addressForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const city = document.getElementById("city").value;
+      const pincode = document.getElementById("pincode").value;
+
+      const addressInfo = { name, phone, address, city, pincode };
+      localStorage.setItem("userAddress", JSON.stringify(addressInfo));
+
+      addressForm.classList.add("hidden");
+      paymentSection.classList.remove("hidden");
+    });
+
+    document.querySelectorAll('input[name="payment"]').forEach((radio) => {
+      radio.addEventListener("change", () => {
+        const value = radio.value;
+        cardInfoDiv.classList.add("hidden");
+        upiInfoDiv.classList.add("hidden");
+        netbankingInfoDiv.classList.add("hidden");
+
+        if (value === "Credit Card") {
+          cardInfoDiv.classList.remove("hidden");
+        } else if (value === "UPI") {
+          upiInfoDiv.classList.remove("hidden");
+        } else if (value === "NetBanking") {
+          netbankingInfoDiv.classList.remove("hidden");
+        }
+      });
+    });
+
+    submitPaymentBtn.addEventListener("click", () => {
+      const selectedPayment = document.querySelector('input[name="payment"]:checked');
+      if (!selectedPayment) {
+        alert("Please select a payment method.");
+        return;
+      }
+      localStorage.setItem("paymentMethod", selectedPayment.value);
+      window.location.href = "success.html";
+    });
+  </script>
+</body>
+</html>
