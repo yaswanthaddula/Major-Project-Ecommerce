@@ -7,10 +7,10 @@ This platform includes user login/register, product browsing, add-to-cart system
 🎓 Perfect for Student Projects & Resume Portfolio
 🌙 Modern Dark Theme + Fully Responsive Design
 
-🌐 Live Demo
+## 🌐 Live Demo
 🔗 https://ecommerce-eb22f.web.app
 
-📸 Preview Screens
+## 📸 Preview Screens
 | Register | Login | Home |
 |---------|-------|------|
 | ![](https://github.com/yaswanthaddula/Ecommerce/raw/main/register.png) | ![](https://github.com/yaswanthaddula/Ecommerce/raw/main/login.png) | ![](https://github.com/yaswanthaddula/Ecommerce/raw/main/home.png) |
@@ -24,7 +24,7 @@ This platform includes user login/register, product browsing, add-to-cart system
 | ![](https://github.com/yaswanthaddula/Ecommerce/raw/main/success.png) | ![](https://github.com/yaswanthaddula/Ecommerce/raw/main/history.png) |
 
 	
-📁 Project Structure
+## 📁 Project Structure
 Ecommerce/
 ├── firebase.json
 ├── .firebaserc
@@ -55,7 +55,7 @@ Ecommerce/
 ├── home.js
 └── product.js
 
-🧠 Key Features
+## 🧠 Key Features
 🔐 User Login / Register System
 🎨 Modern Responsive UI (Dark Mode)
 🛍 Product View & Add to Cart
@@ -66,7 +66,7 @@ Ecommerce/
 🕒 Order History Linked to Logged-in User
 📦 Data Stored for Each User Individually
 
-🚀 Future Enhancements
+## 🚀 Future Enhancements
 💳 Razorpay / Stripe Payment Integration
 🧑‍💼 Admin Dashboard for Product Management
 ⭐ Ratings & Reviews System
